@@ -59,3 +59,4 @@ jobs:
         with:
           workflow: build-listing.yml
           repo: KaoruBoy/vcc
+          token: "${{ secrets.PAT }}"
