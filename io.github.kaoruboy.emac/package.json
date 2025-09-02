@@ -1,6 +1,7 @@
 {
   "name": "io.github.kaoruboy.emac",
   "displayName": "Expression Menu As Code",
+  "unity": "2022.3",
   "version": "1.0.0",
   "description": "Easily generate expression menus and and parameter lists with code",
   "gitDependencies": {},
