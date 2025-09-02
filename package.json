@@ -1,0 +1,18 @@
+{
+  "name": "io.kaoruboy.emac",
+  "displayName": "Expression Menu As Code",
+  "version": "1.0.0",
+  "description": "Easily generate expression menus and and parameter lists with code",
+  "gitDependencies": {},
+  "vpmDependencies": {
+    "com.vrchat.avatars": "3.8.2"
+  },
+  "author": {
+    "name": "Kaoru",
+    "email": "kaoruboyvrc@gmail.com",
+    "url": "https://kaoruboy.github.io"
+  },
+  "legacyFolders": {},
+  "legacyFiles": {},
+  "localPath": "C:\\Projects\\VRChat\\Avatars\\Alba\\AlbaUnity\\Packages\\io.github.kaoruboy.emac"
+}
