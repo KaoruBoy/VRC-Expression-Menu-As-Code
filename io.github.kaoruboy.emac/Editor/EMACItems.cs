@@ -10,13 +10,13 @@ namespace EMAC
     /// </summary>
     public abstract class EMACItem
     {
-        public EMACItem Parent;
+        public EMACMenu Parent { get; internal set; }
 
-        public Texture2D Icon;
-        public string Name;
+        public Texture2D Icon { get; internal set; }
+        public string Name { get; internal set; }
 
-        public string ActionParameter;
-        public float ActionValue;
+        public string ActionParameter { get; internal set; }
+        public float ActionValue { get; internal set; }
 
         /// <summary>
         /// Absolute path of the item within the menu
@@ -81,10 +81,74 @@ namespace EMAC
     /// </summary>
     public class EMACMenu : EMACItem
     {
-        public Texture2D NextPageIcon;
-        public string NextPageText;
+        public Texture2D FolderIcon { get; internal set; }
+        public Texture2D ItemIcon { get; internal set; }
 
-        public List<EMACItem> Items = new List<EMACItem>();
+        public Texture2D ResolvedFolderIcon
+        {
+            get
+            {
+                var p = this;
+                while (p != null)
+                {
+                    if (p.FolderIcon != null)
+                        return p.FolderIcon;
+                    p = p.Parent;
+                }
+                return null;
+            }
+        }
+
+        public Texture2D ResolvedItemIcon
+        {
+            get
+            {
+                var p = this;
+                while (p != null)
+                {
+                    if (p.ItemIcon != null)
+                        return p.ItemIcon;
+                    p = p.Parent;
+                }
+                return null;
+            }
+        }
+
+        public Texture2D NextPageIcon { get; internal set; }
+        public string NextPageText { get; internal set; }
+
+        public Texture2D ResolvedNextPageIcon
+        {
+            get
+            {
+                var p = this;
+                while (p != null)
+                {
+                    if (p.NextPageIcon != null)
+                        return p.NextPageIcon;
+                    p = p.Parent;
+                }
+                return null;
+            }
+        }
+
+        public string ResolvedNextPageText
+        {
+            get
+            {
+                var p = this;
+                while (p != null)
+                {
+                    if (p.NextPageText != null)
+                        return p.NextPageText;
+                    p = p.Parent;
+                }
+                return null;
+            }
+        }
+
+        public List<EMACItem> Items { get; internal set; } = new List<EMACItem>();
+        public Texture2D ResolvedDefaultItemIcon { get; internal set; }
 
         /// <summary>
         /// Create a new menu with a parameter to be set when entered.
@@ -93,7 +157,7 @@ namespace EMAC
         /// <param name="name">Name of the menu</param>
         /// <param name="parameter">Name of the parameter to be set when entered</param>
         /// <param name="value">Value to set the parameter to</param>
-        /// <param name="icon">Optional icon. When null, EMACBuilder.DefaultFolderIcon is used</param>
+        /// <param name="icon">Optional icon. When null, Parent's FolderIcon or EMACBuilder.DefaultFolderIcon is used</param>
         public EMACMenu(string name, string parameter, float value, Texture2D icon = null)
         {
             Name = name;
@@ -107,7 +171,7 @@ namespace EMAC
         /// Use .Add() to add items to the menu
         /// </summary>
         /// <param name="name">Name of the menu</param>
-        /// <param name="icon">Optional icon. When null, EMACBuilder.DefaultFolderIcon is used</param>
+        /// <param name="icon">Optional icon. When null, Parent's ItemIcon EMACBuilder.DefaultFolderIcon is used</param>
         public EMACMenu(string name, Texture2D icon = null) : this(name, null, 0f, icon) { }
         /// <summary>
         /// Create a new menu with a parameter to be set when entered.
@@ -138,6 +202,24 @@ namespace EMAC
         public EMACMenu(string name, string parameter, int value, Texture2D icon = null) : this(name, parameter, (float)value, icon) { }
 
         /// <summary>
+        /// Set the icon to be used by submenu items when no custom icon is defined.
+        /// </summary>
+        public EMACMenu WithDefaultFolderIcon(Texture2D icon)
+        {
+            FolderIcon = icon ?? SampleIcons.SymbolMagic;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the icon to be used by menu items other than submenus when no custom icon is defined.
+        /// </summary>
+        public EMACMenu WithDefaultItemIcon(Texture2D icon)
+        {
+            ItemIcon = icon ?? SampleIcons.ItemFolder;
+            return this;
+        }
+
+        /// <summary>
         /// Override the icon to be used by the "Next Page" submenu created when this menu contains more than 8 items.
         /// When null, EMACBuilder.DefaultNextPageIcon will be used
         /// </summary>
@@ -156,7 +238,7 @@ namespace EMAC
             NextPageText = text;
             return this;
         }
-        
+
         /// <summary>
         /// Add a new item to the menu.
         /// If an item with the same name already exists, it will be removed.
@@ -240,7 +322,7 @@ namespace EMAC
         /// <param name="icon">Optional icon. When null, EMACBuilder.DefaultItemIcon is used</param>
         public EMACToggle(string name, string parameter, int value, Texture2D icon = null) : this(name, parameter, (float)value, icon) { }
     }
-    
+
     /// <summary>
     /// Menu item, which sets the parameter to the given value when touched
     /// </summary>
@@ -285,7 +367,7 @@ namespace EMAC
         /// <param name="icon">Optional icon. When null, EMACBuilder.DefaultItemIcon is used</param>
         public EMACButton(string name, string parameter, int value, Texture2D icon = null) : this(name, parameter, (float)value, icon) { }
     }
-    
+
     /// <summary>
     /// Menu item, which sets the given float parameter to the clockwise rotation of this item.
     /// 0° rotation will set the parameter to 0.0, 180° rotation will set it to 1.0
@@ -293,7 +375,7 @@ namespace EMAC
     /// </summary>
     public class EMACRadial : EMACItem
     {
-        public string RotationParameter;
+        public string RotationParameter { get; internal set; }
 
         /// <summary>
         /// Create a new radial item with a parameter to be set when rotated.
@@ -315,8 +397,15 @@ namespace EMAC
     /// </summary>
     public abstract class EMACPuppet : EMACItem
     {
-        public string UpText, DownText, LeftText, RightText;
-        public Texture2D UpIcon, DownIcon, LeftIcon, RightIcon;
+        public string UpText { get; internal set; }
+        public string DownText { get; internal set; }
+        public string LeftText { get; internal set; }
+        public string RightText { get; internal set; }
+
+        public Texture2D UpIcon { get; internal set; }
+        public Texture2D DownIcon { get; internal set; }
+        public Texture2D LeftIcon { get; internal set; }
+        public Texture2D RightIcon { get; internal set; }
 
         public EMACPuppet WithDirectionalIcons(Texture2D up, Texture2D right, Texture2D down, Texture2D left)
         {
@@ -350,7 +439,8 @@ namespace EMAC
     /// </summary>
     public class EMACTwoAxisPuppet : EMACPuppet
     {
-        public string VerticalParameter, HorizontalParameter;
+        public string VerticalParameter { get; internal set; }
+        public string HorizontalParameter { get; internal set; }
 
         /// <summary>
         /// Create a new 2 axis puppet item with a parameter to be set when the joystick is moved.
@@ -376,7 +466,10 @@ namespace EMAC
     /// </summary>
     public class EMACFourAxisPuppet : EMACPuppet
     {
-        public string UpParameter, DownParameter, LeftParameter, RightParameter;
+        public string UpParameter { get; internal set; }
+        public string DownParameter { get; internal set; }
+        public string LeftParameter { get; internal set; }
+        public string RightParameter { get; internal set; }
 
         /// <summary>
         /// Create a new 2 axis puppet item with a parameter to be set when the joystick is moved.

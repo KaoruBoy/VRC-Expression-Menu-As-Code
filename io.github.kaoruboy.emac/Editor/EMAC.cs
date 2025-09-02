@@ -65,7 +65,7 @@ namespace EMAC
         /// </summary>
         public EMACBuilder WithDefaultItemIcon(Texture2D icon)
         {
-            DefaultFolderIcon = icon ?? SampleIcons.ItemFolder;
+            DefaultItemIcon = icon ?? SampleIcons.ItemFolder;
             return this;
         }
 
@@ -160,7 +160,7 @@ namespace EMAC
                     var control = new VRCExpressionsMenu.Control()
                     {
                         name = item.Name,
-                        icon = item.Icon ?? DefaultItemIcon,
+                        icon = item.Icon ?? menu.ResolvedItemIcon ?? DefaultItemIcon,
                         parameter = Param(item.ActionParameter),
                         value = item.ActionValue
                     };
@@ -171,7 +171,7 @@ namespace EMAC
                         PackAsset(sub);
                         control.type = VRCExpressionsMenu.Control.ControlType.SubMenu;
                         control.subMenu = sub;
-                        control.icon = item.Icon ?? DefaultFolderIcon;
+                        control.icon = item.Icon ?? menu.ResolvedFolderIcon ?? DefaultFolderIcon;
                     }
                     else if (item is EMACToggle t)
                         control.type = VRCExpressionsMenu.Control.ControlType.Toggle;
@@ -217,7 +217,7 @@ namespace EMAC
                     VRCExpressionsMenu CreatePagedMenu(List<VRCExpressionsMenu.Control> items)
                     {
                         var pageMenu = new VRCExpressionsMenu();
-                        pageMenu.name = menu.NextPageText ?? DefaultNextPageText;
+                        pageMenu.name = menu.ResolvedNextPageText ?? DefaultNextPageText;
                         pageMenu.Parameters = param;
 
                         var pageControls = items.Take(7).ToList();
@@ -227,8 +227,8 @@ namespace EMAC
                         {
                             var nextPageControl = new VRCExpressionsMenu.Control()
                             {
-                                name = menu.NextPageText ?? DefaultNextPageText,
-                                icon = menu.NextPageIcon ?? DefaultNextPageIcon,
+                                name = menu.ResolvedNextPageText ?? DefaultNextPageText,
+                                icon = menu.ResolvedNextPageIcon ?? DefaultNextPageIcon ,
                                 type = VRCExpressionsMenu.Control.ControlType.SubMenu,
                                 subMenu = CreatePagedMenu(nextItems)
                             };
