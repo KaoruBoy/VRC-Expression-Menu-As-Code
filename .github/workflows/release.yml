@@ -55,8 +55,8 @@ jobs:
             ${{ env.packageName }}/package.json
 
       - name: Trigger VCC update
-        uses: benc-uk/workflow-dispatch@v1
+        uses: peter-evans/repository-dispatch@v3.0.0
         with:
-          workflow: build-listing.yml
-          repo: KaoruBoy/vcc
+          event-type: update-vcc
+          repository: KaoruBoy/vcc
           token: "${{ secrets.PAT }}"
