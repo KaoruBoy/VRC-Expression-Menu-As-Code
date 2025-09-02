@@ -53,3 +53,9 @@ jobs:
             ${{ env.zipFile }}
             ${{ env.unityPackage }}
             ${{ env.packageName }}/package.json
+
+      - name: Trigger VCC update
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: build-listing.yml
+          repo: KaoruBoy/vcc
