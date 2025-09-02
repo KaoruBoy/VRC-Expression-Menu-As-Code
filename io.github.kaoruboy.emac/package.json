@@ -1,5 +1,5 @@
 {
-  "name": "io.kaoruboy.emac",
+  "name": "io.github.kaoruboy.emac",
   "displayName": "Expression Menu As Code",
   "version": "1.0.0",
   "description": "Easily generate expression menus and and parameter lists with code",
@@ -13,6 +13,5 @@
     "url": "https://kaoruboy.github.io"
   },
   "legacyFolders": {},
-  "legacyFiles": {},
-  "localPath": "C:\\Projects\\VRChat\\Avatars\\Alba\\AlbaUnity\\Packages\\io.github.kaoruboy.emac"
+  "legacyFiles": {}
 }
