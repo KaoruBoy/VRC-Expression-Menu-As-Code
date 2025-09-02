@@ -135,15 +135,16 @@ namespace EMAC
                 VRCExpressionsMenu.Control.Parameter Param(string param)
                 {
                     var name = (param == null) ? null : (ParameterPrefix + param);
-                    if (!paramsList.Any(p => p.name == name))
-                        paramsList.Add(new VRCExpressionParameters.Parameter()
-                        {
-                            name = name,
-                            valueType = VRCExpressionParameters.ValueType.Float,
-                            saved = false,
-                            networkSynced = false,
-                            defaultValue = 0.0f
-                        });
+                    if (param != null)
+                        if (!paramsList.Any(p => p.name == name))
+                            paramsList.Add(new VRCExpressionParameters.Parameter()
+                            {
+                                name = name,
+                                valueType = VRCExpressionParameters.ValueType.Float,
+                                saved = false,
+                                networkSynced = false,
+                                defaultValue = 0.0f
+                            });
                     return new VRCExpressionsMenu.Control.Parameter() { name = name };
                 }
 
@@ -228,7 +229,7 @@ namespace EMAC
                             var nextPageControl = new VRCExpressionsMenu.Control()
                             {
                                 name = menu.ResolvedNextPageText ?? DefaultNextPageText,
-                                icon = menu.ResolvedNextPageIcon ?? DefaultNextPageIcon ,
+                                icon = menu.ResolvedNextPageIcon ?? DefaultNextPageIcon,
                                 type = VRCExpressionsMenu.Control.ControlType.SubMenu,
                                 subMenu = CreatePagedMenu(nextItems)
                             };
