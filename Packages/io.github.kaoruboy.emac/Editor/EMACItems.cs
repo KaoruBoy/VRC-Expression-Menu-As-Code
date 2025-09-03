@@ -118,6 +118,8 @@ namespace EMAC
         public Texture2D NextPageIcon { get; internal set; }
         public string NextPageText { get; internal set; }
         public int? MaxItemsPerPage { get; internal set; }
+        public bool? PadPages { get; internal set; }
+        public Texture2D PaddingItemIcon { get; internal set; }
 
         public Texture2D ResolvedNextPageIcon
         {
@@ -164,8 +166,37 @@ namespace EMAC
             }
         }
 
+        public bool? ResolvedPadPages
+        {
+            get
+            {
+                var p = this;
+                while (p != null)
+                {
+                    if (p.PadPages != null)
+                        return p.PadPages;
+                    p = p.Parent;
+                }
+                return null;
+            }
+        }
+
+        public Texture2D ResolvedPaddingItemIcon
+        {
+            get
+            {
+                var p = this;
+                while (p != null)
+                {
+                    if (p.PaddingItemIcon != null)
+                        return p.PaddingItemIcon;
+                    p = p.Parent;
+                }
+                return null;
+            }
+        }
+
         public List<EMACItem> Items { get; internal set; } = new List<EMACItem>();
-        public Texture2D ResolvedDefaultItemIcon { get; internal set; }
 
         /// <summary>
         /// Create a new menu with a parameter to be set when entered.
@@ -258,7 +289,7 @@ namespace EMAC
 
         /// <summary>
         /// Set the max amount of items per page, including the next page menu.
-        /// If null, uses the value of it's parents or EMACBuilder.MaxItemsPerPage.
+        /// If null, uses the value of it's parent's or EMACBuilder's MaxItemsPerPage.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if amount is not within the 2-8 range</exception>
         public EMACMenu WithMaxItemsPerPage(int? amount)
@@ -266,6 +297,17 @@ namespace EMAC
             if (amount < 2 || amount > 8)
                 throw new ArgumentOutOfRangeException(nameof(amount), "MaxItemsPerPage must be between 2 and 8.");
             MaxItemsPerPage = amount;
+            return this;
+        }
+
+        /// <summary>
+        /// If true and a menu overflows onto a next page and the item count is not MaxItemsPerPage, create padding items with a given texture or empty texture when null.
+        /// If null, uses the value of it's parent's or EMACBuilder's PadPages.
+        /// </summary>
+        public EMACMenu WithPagePadding(bool? shouldPad, Texture2D paddingIcon = null)
+        {
+            PadPages = shouldPad;
+            PaddingItemIcon = paddingIcon;
             return this;
         }
 

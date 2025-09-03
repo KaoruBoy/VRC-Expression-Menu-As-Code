@@ -25,6 +25,9 @@ namespace EMAC
         public string DefaultNextPageText { get; internal set; } = "Next Page";
 
         public int MaxItemsPerPage { get; internal set; } = 8;
+        public bool PadPages { get; internal set; } = false;
+        private static Texture2D DefaultPaddingIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/io.github.kaoruboy.emac/Editor/empty.png");
+        public Texture2D PaddingItemIcon { get; internal set; } = DefaultPaddingIcon;
 
         /// <summary>
         /// Create a new builder for expression menus.
@@ -90,7 +93,7 @@ namespace EMAC
         }
 
         /// <summary>
-        /// Set the max amount of items per page, including the next page menu
+        /// Set the max amount of items per page, including the next page menu.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if amount is not within the 2-8 range</exception>
         public EMACBuilder WithMaxItemsPerPage(int amount)
@@ -99,6 +102,18 @@ namespace EMAC
                 throw new ArgumentOutOfRangeException(nameof(amount), "MaxItemsPerPage must be between 2 and 8.");
 
             MaxItemsPerPage = amount;
+            return this;
+        }
+
+        /// <summary>
+        /// If true and a menu overflows onto a next page and the item count is not MaxItemsPerPage, create padding items with a given texture or empty texture when null.
+        /// </summary>
+        public EMACBuilder WithPagePadding(bool shouldPad, Texture2D paddingIcon = null)
+        {
+            if (paddingIcon == null)
+                paddingIcon = DefaultPaddingIcon;
+            PadPages = shouldPad;
+            PaddingItemIcon = paddingIcon;
             return this;
         }
 
@@ -250,11 +265,24 @@ namespace EMAC
                             pageControls.Add(nextPageControl);
                         }
                         else if (nextItems.Count == 1)
-                        {
                             pageControls.Add(nextItems[0]);
-                        }
 
+                        var shouldPad = menu.ResolvedPadPages ?? PadPages;
+                        if (shouldPad && pageControls.Count != MaxItemsPerPage)
+                        {
+                            var padIcon = menu.PaddingItemIcon ?? PaddingItemIcon;
+                            for (int i = pageControls.Count; i < MaxItemsPerPage; i++)
+                            {
+                                pageControls.Add(new VRCExpressionsMenu.Control()
+                                {
+                                    name = "",
+                                    type = VRCExpressionsMenu.Control.ControlType.Button,
+                                    icon = padIcon
+                                });
+                            }
+                        }
                         pageMenu.controls = pageControls;
+
                         PackAsset(pageMenu);
                         return pageMenu;
                     }
