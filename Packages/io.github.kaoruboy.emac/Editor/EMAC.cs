@@ -14,15 +14,15 @@ namespace EMAC
     /// </summary>
     public class EMACBuilder
     {
-        public VRCExpressionsMenu TargetMenu;
-        public EMACMenu RootMenu = new EMACMenu("");
-        public string ParameterPrefix = "";
+        public VRCExpressionsMenu TargetMenu { get; internal set; }
+        public EMACMenu RootMenu { get; internal set; } = new EMACMenu("");
+        public string ParameterPrefix { get; internal set; } = "";
 
-        public Texture2D DefaultFolderIcon = SampleIcons.ItemFolder;
-        public Texture2D DefaultItemIcon = null;
+        public Texture2D DefaultFolderIcon { get; internal set; } = SampleIcons.ItemFolder;
+        public Texture2D DefaultItemIcon{ get; internal set; } = null;
 
-        public Texture2D DefaultNextPageIcon = SampleIcons.ItemFolder;
-        public string DefaultNextPageText = "Next Page";
+        public Texture2D DefaultNextPageIcon { get; internal set; } = SampleIcons.ItemFolder;
+        public string DefaultNextPageText { get; internal set; } = "Next Page";
 
         /// <summary>
         /// Create a new builder for expression menus.
