@@ -19,10 +19,12 @@ namespace EMAC
         public string ParameterPrefix { get; internal set; } = "";
 
         public Texture2D DefaultFolderIcon { get; internal set; } = SampleIcons.ItemFolder;
-        public Texture2D DefaultItemIcon{ get; internal set; } = null;
+        public Texture2D DefaultItemIcon { get; internal set; } = null;
 
         public Texture2D DefaultNextPageIcon { get; internal set; } = SampleIcons.ItemFolder;
         public string DefaultNextPageText { get; internal set; } = "Next Page";
+
+        public int MaxItemsPerPage { get; internal set; } = 8;
 
         /// <summary>
         /// Create a new builder for expression menus.
@@ -84,6 +86,19 @@ namespace EMAC
         public EMACBuilder WithNextPageText(string text)
         {
             DefaultNextPageText = text ?? "Next Page";
+            return this;
+        }
+
+        /// <summary>
+        /// Set the max amount of items per page, including the next page menu
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if amount is not within the 2-8 range</exception>
+        public EMACBuilder WithMaxItemsPerPage(int amount)
+        {
+            if (amount < 2 || amount > 8)
+                throw new ArgumentOutOfRangeException(nameof(amount), "MaxItemsPerPage must be between 2 and 8.");
+
+            MaxItemsPerPage = amount;
             return this;
         }
 
@@ -208,19 +223,20 @@ namespace EMAC
                     controls.Add(control);
                 }
 
-                if (controls.Count > 8)
+                int maxItems = menu.ResolvedMaxItemsPerPage ?? MaxItemsPerPage;
+                if (controls.Count > maxItems)
                 {
-                    var remainingItems = controls.Skip(7).ToList();
-                    controls = controls.Take(7).ToList();
+                    var remainingItems = controls.Skip(maxItems - 1).ToList();
+                    controls = controls.Take(maxItems - 1).ToList();
 
                     VRCExpressionsMenu CreatePagedMenu(List<VRCExpressionsMenu.Control> items)
                     {
-                        var pageMenu = new VRCExpressionsMenu();
+                        var pageMenu = ScriptableObject.CreateInstance<VRCExpressionsMenu>();
                         pageMenu.name = menu.ResolvedNextPageText ?? DefaultNextPageText;
                         pageMenu.Parameters = param;
 
-                        var pageControls = items.Take(7).ToList();
-                        var nextItems = items.Skip(7).ToList();
+                        var pageControls = items.Take(maxItems - 1).ToList();
+                        var nextItems = items.Skip(maxItems - 1).ToList();
 
                         if (nextItems.Count > 1)
                         {

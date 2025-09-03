@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace EMAC
 {
@@ -116,6 +117,7 @@ namespace EMAC
 
         public Texture2D NextPageIcon { get; internal set; }
         public string NextPageText { get; internal set; }
+        public int? MaxItemsPerPage { get; internal set; }
 
         public Texture2D ResolvedNextPageIcon
         {
@@ -141,6 +143,21 @@ namespace EMAC
                 {
                     if (p.NextPageText != null)
                         return p.NextPageText;
+                    p = p.Parent;
+                }
+                return null;
+            }
+        }
+
+        public int? ResolvedMaxItemsPerPage
+        {
+            get
+            {
+                var p = this;
+                while (p != null)
+                {
+                    if (p.MaxItemsPerPage != null)
+                        return p.MaxItemsPerPage;
                     p = p.Parent;
                 }
                 return null;
@@ -236,6 +253,19 @@ namespace EMAC
         public EMACMenu WithNextPageText(string text)
         {
             NextPageText = text;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the max amount of items per page, including the next page menu.
+        /// If null, uses the value of it's parents or EMACBuilder.MaxItemsPerPage.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if amount is not within the 2-8 range</exception>
+        public EMACMenu WithMaxItemsPerPage(int? amount)
+        {
+            if (amount < 2 || amount > 8)
+                throw new ArgumentOutOfRangeException(nameof(amount), "MaxItemsPerPage must be between 2 and 8.");
+            MaxItemsPerPage = amount;
             return this;
         }
 
