@@ -268,10 +268,10 @@ namespace EMAC
                             pageControls.Add(nextItems[0]);
 
                         var shouldPad = menu.ResolvedPadPages ?? PadPages;
-                        if (shouldPad && pageControls.Count != MaxItemsPerPage)
+                        if (shouldPad && pageControls.Count != maxItems)
                         {
                             var padIcon = menu.PaddingItemIcon ?? PaddingItemIcon;
-                            for (int i = pageControls.Count; i < MaxItemsPerPage; i++)
+                            for (int i = pageControls.Count; i < maxItems; i++)
                             {
                                 pageControls.Add(new VRCExpressionsMenu.Control()
                                 {
