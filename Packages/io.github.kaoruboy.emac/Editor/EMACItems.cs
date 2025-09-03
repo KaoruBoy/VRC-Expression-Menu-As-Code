@@ -254,7 +254,7 @@ namespace EMAC
         /// </summary>
         public EMACMenu WithDefaultFolderIcon(Texture2D icon)
         {
-            FolderIcon = icon ?? SampleIcons.SymbolMagic;
+            FolderIcon = icon;
             return this;
         }
 
@@ -263,7 +263,7 @@ namespace EMAC
         /// </summary>
         public EMACMenu WithDefaultItemIcon(Texture2D icon)
         {
-            ItemIcon = icon ?? SampleIcons.ItemFolder;
+            ItemIcon = icon;
             return this;
         }
 
