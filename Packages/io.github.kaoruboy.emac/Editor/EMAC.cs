@@ -127,7 +127,7 @@ namespace EMAC
             }
 
             List<VRCExpressionParameters.Parameter> paramsList = new();
-            VRCExpressionParameters param = new();
+            VRCExpressionParameters param = ScriptableObject.CreateInstance<VRCExpressionParameters>();
             param.name = "z Generated Parameter List - DO NOT USE!!!";
 
             VRCExpressionsMenu BuildMenu(EMACMenu menu, VRCExpressionsMenu target = null)
@@ -148,7 +148,7 @@ namespace EMAC
                     return new VRCExpressionsMenu.Control.Parameter() { name = name };
                 }
 
-                var mainMenu = target ?? new VRCExpressionsMenu();
+                var mainMenu = target ?? ScriptableObject.CreateInstance<VRCExpressionsMenu>();
                 mainMenu.name = menu.Path;
                 mainMenu.Parameters = param;
 
