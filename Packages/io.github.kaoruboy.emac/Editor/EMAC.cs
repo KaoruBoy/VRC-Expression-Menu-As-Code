@@ -2,11 +2,9 @@
 using UnityEngine;
 using UnityEditor;
 using VRC.SDK3.Avatars.ScriptableObjects;
-using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using BestHTTP.SecureProtocol.Org.BouncyCastle.Security;
 
 namespace EMAC
 {
@@ -30,11 +28,11 @@ namespace EMAC
         /// Create a new builder for expression menus.
         /// </summary>
         /// <param name="targetMenu">The root expression menu all items will be written to. Must be saved to a path. Subfolders will be added as a subresource</param>
-        /// <exception cref="InvalidParameterException">Thrown if provided targetMenu is null</exception>
+        /// <exception cref="ArgumentException">Thrown if provided targetMenu is null</exception>
         public EMACBuilder(VRCExpressionsMenu targetMenu)
         {
             if (targetMenu == null)
-                throw new InvalidParameterException("targetMenu may not be null");
+                throw new ArgumentException("targetMenu may not be null");
 
             TargetMenu = targetMenu;
         }
@@ -156,7 +154,7 @@ namespace EMAC
                 foreach (var item in menu.Items)
                 {
                     if (item.Parent != menu)
-                        throw new InvalidParameterException("Parent of item does not match! Did you add an item twice or forgot to use EMACMenu.Add()?");
+                        throw new ArgumentException("Parent of item does not match! Did you add an item twice or forgot to use EMACMenu.Add()?");
 
                     var control = new VRCExpressionsMenu.Control()
                     {
